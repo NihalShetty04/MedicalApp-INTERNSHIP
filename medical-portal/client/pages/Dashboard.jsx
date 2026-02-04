@@ -1,38 +1,28 @@
 import { useEffect,useState } from "react"
 import api from "../api"
 
+import UploadRecord from "../components/UploadRecord"
+import Timeline from "../components/Timeline"
+import EmergencyButton from "../components/EmergencyButton"
+
 export default function Dashboard(){
   const [records,setRecords]=useState([])
-  const [time,setTime]=useState(0)
-
   const id = localStorage.getItem("id")
 
-  useEffect(()=>{
+  const load = () =>
     api.get(`/records/${id}`).then(r=>setRecords(r.data))
-  },[])
 
-  const emergency=()=>{
-    setTime(600)
-    const t=setInterval(()=>{
-      setTime(x=>{
-        if(x<=1) clearInterval(t)
-        return x-1
-      })
-    },1000)
-  }
+  useEffect(()=>{ load() },[])
 
   return(
     <div>
-      <h2>Medical Timeline</h2>
+      <h2>Patient Dashboard</h2>
 
-      {records.map((r,i)=>(
-        <div key={i}>
-          {r.date} | {r.hospital} | {r.diagnosis} 🔒
-        </div>
-      ))}
+      <UploadRecord refresh={load} />
 
-      <button onClick={emergency}>🚨 Emergency Access</button>
-      {time>0 && <p>Active: {time}s</p>}
+      <Timeline records={records} />
+
+      <EmergencyButton />
     </div>
   )
 }
