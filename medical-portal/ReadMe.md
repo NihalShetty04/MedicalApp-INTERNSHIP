@@ -36,6 +36,3 @@ npm run dev
 ## Project Structure
 server/ → backend API  
 client/ → frontend UI  
-
-## Author
-Your Name
